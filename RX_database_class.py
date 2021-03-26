@@ -10,7 +10,7 @@ from managment_functions import format_string, add_unique_disease_id, add_unique
 from managment_functions import add_unique_drug_id, get_id_of_string, add_relation_to_dict
 
 
-class RXinstance:
+class RX_instance:
     """
     RX-database class
     takes the json csv and manages it to create a database.
@@ -149,7 +149,7 @@ class RXinstance:
         return 'created relational dictionaries\n'
 
 
-    def create_RXdatabase(self, database_name):
+    def create_RX_database(self, database_name):
         """
         method that creates the SQL database for the class data and
         instanciate the self.c cursor wich operates over it.
