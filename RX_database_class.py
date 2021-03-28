@@ -38,9 +38,11 @@ class RX_instance:
             formatted_element = format_string(element)
 
             if self.disease_recognition_string in element:
-                self.diseases_list.append(formatted_element)
+                if formatted_element not in self.diseases_list:
+                    self.diseases_list.append(formatted_element)
             else:
-                self.symptoms_list.append(formatted_element)
+                if formatted_element not in self.symptoms_list:
+                    self.symptoms_list.append(formatted_element)
 
             for sym in lists[0]:   #['Related']
                 symptom = format_string(sym)
@@ -57,7 +59,7 @@ class RX_instance:
 
     def create_main_dicts(self):
         """
-        method that creates disease and symptom id based dictionaries.
+        method that creates disease and symptom id based dictionaries: {'id': 'name'}.
         it uses the self.*_list with the add_unique_*_id and stores the resulting
         dicionaries in the self.id_*_dict
         """

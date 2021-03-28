@@ -6,9 +6,7 @@ colection of functions for general management
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 ps = PorterStemmer()
-from nltk.corpus import stopwords
-stop_words = set(stopwords.words('english'))
-stop_words.add(':')
+
 from statistics import mean, stdev
 
 # @deprecated
@@ -23,13 +21,16 @@ from statistics import mean, stdev
 #     return disease_recognition_string in string
 
 
-def format_string(string):
+def format_string(string, boosted=False):
     """
     tries to format the passed string to a "standard":
         all lowercase,
         no trailing and leading witespaces,
         no '_' but spaces,
         no "'s"
+        no "/" but " or "
+        if boosted:
+            no duplicate words
     then returns it.
     """
     ###
@@ -40,8 +41,14 @@ def format_string(string):
     step3 = step2.strip()
     step4 = step3.replace('_', ' ')
     step5 = step4.replace("'s", '')
+    step6 = step5.replace("/", ' or ')
+    if boosted:
+        step7 = word_tokenize(step6) #add if stemmed after this?
+        step8 = set(step7)      #this is the no duplicate words part
+        step9 = ' '.join(word for word in step8)
+        return step9
 
-    return step5
+    return step6
 
 
 def substring_in_elements(lis, substring):

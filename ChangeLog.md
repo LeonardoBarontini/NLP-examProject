@@ -1,3 +1,16 @@
+--- time to travel between databases ---
+new functions for data handling given to Disgenet_instance and D_MeshMiner_miner_disease_instance 
+the D_MeshMiner_miner_disease_instance class now auto loads the corresponding .tsv table
+format_string function is now boostable
+added module nlp wich contains scoring functions for match analysis and a list of "taboo_words"
+added module stargate wich contains the Stargate_to_* classes
+added Stargate_to_SNAP class wich handles the linking process to the SNAP database
+expanded main file to handle the operations
+
+
+--- pre-link adjustments ---
+fixed a bug in RX_instance.create_main_lists wich led to 5 double records in disease list and prehemptively fixed even for symptoms
+
 --- disgenet class and snap first class ---
 added Disgenet_instance class wich reads from the disgenet database
 given load and unload methods to disgenet class for mamory management
@@ -27,7 +40,7 @@ added test_add_unique_symptom_id_*_()
 now add_unique_disease_id() raises ValueError if input list is longer than the default value
 now the numbering of the ids in add_unique_disease_id() has a default input value: digits = 6
 added test_add_unique_disease_id_*_()
-renamed class Instanciator to RXinstance
+renamed class Instanciator to RX_instance
 renamed sqlite_database_populator.py  to  RX_database_class.py
 added manualTest_input_type()
 

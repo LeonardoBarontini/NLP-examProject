@@ -17,7 +17,7 @@ class Disgenet_instance:
 
     def __init__(self, database_name):
         """
-        
+        by default, after estabilishing the connection, only the diseaseAttributes table is loaded, for memory sake.
         """
         self.database = sqlite3.connect(database_name)
         self.disease2class = None
@@ -28,8 +28,7 @@ class Disgenet_instance:
         self.variantAttributes = None
         self.variantDiseaseNetwork = None
         self.variantGene = None
-        self.test = ['hyperpigmentation', 'skin']#['muscle', 'weakness']#['low', 'blood', 'pressure']#['hypoglycemia']#, 'low', 'blood', 'glucose']#['hyperpigmentation', 'skin', 'darkening'] #['upper', 'abdominal', 'pain']
-
+        
     def load_disease2class_table(self):
         self.disease2class = pandas.read_sql_query("SELECT * FROM disease2class", self.database)
 
@@ -83,7 +82,10 @@ class Disgenet_instance:
         target = self.diseaseAttributes['diseaseName']
         self.disease_list = list(target)
 
-
+    def create_disease_dict(self):
+        self.disease_dictionary = {}
+        for index, row in self.diseaseAttributes.iterrows():
+            self.disease_dictionary[row['diseaseId']]=row['diseaseName']
     
     
     

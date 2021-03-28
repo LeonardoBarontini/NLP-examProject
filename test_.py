@@ -313,8 +313,15 @@ def test_get_id_of_string_key_not_found():
 
 
 
-
-
+# to be implemented?
+# def test_for_double_dict_entries():
+#     lisa=[]
+#     for key, dis in RXdata.id_diseases_dict.items():
+#         if dis not in lisa:
+#             lisa.append(dis)
+#         else:
+#             print(key, dis)
+#             print(lisa.index(dis))
 
 
 
