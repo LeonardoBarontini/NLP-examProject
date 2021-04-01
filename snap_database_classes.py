@@ -60,6 +60,46 @@ class D_MeshMiner_miner_disease_instance:
             dict_of_sets[name] = entry_set
         return dict_of_sets
 
+    def create_disease_name_only_dicts(self):
+        """
+        return a dictionary in the form {'disease_name_string': {'set', 'of', 'word', 'in', 'name', 'only'}}
+        """
+        dict_of_sets = {}
+        for index, row in self.dataframe.iterrows():
+            entry_set = set()
+            name = row['Name']
+            name_word_list = word_tokenize(format_string(name, boosted=True))
+            for x in name_word_list:
+                entry_set.add(x)
+            entry_set.difference_update(taboo_words)
+            dict_of_sets[name] = entry_set
+        return dict_of_sets
+
+
+class G_SynMiner_miner_geneHUGO_instance:
+    """
+    data loader for 'G-SynMiner_miner-geneHUGO.tsv' SNAP table
+    """
+    #placeholder_general_variable = True
+
+    def __init__(self):#, tsv_table):
+        """
+        loads the table in a pandas dataframe
+        """
+        self.dataframe = pandas.read_table('G-SynMiner_miner-geneHUGO.tsv')
+
+    def create_gene_symbol_name_dict(self):
+        dictionary = {}
+        for index, row in self.dataframe.iterrows():
+            dictionary[row['symbol']] = row['name']
+        return dictionary
+
+
+
+
+
+
+
 
 
 

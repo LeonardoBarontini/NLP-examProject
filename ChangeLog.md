@@ -1,3 +1,8 @@
+--- unlimited powerrr ---
+enhanced stargate matching function, now with 91%+ coverage
+upgraded main module, now with more processing and better process monitoring
+added G_SynMiner_miner_geneHUGO_instance class for future gene-linking
+
 --- time to travel between databases ---
 new functions for data handling given to Disgenet_instance and D_MeshMiner_miner_disease_instance 
 the D_MeshMiner_miner_disease_instance class now auto loads the corresponding .tsv table

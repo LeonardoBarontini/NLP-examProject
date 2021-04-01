@@ -37,29 +37,30 @@ def words_in_set(list_of_words, sset, stemmed=False):
             score = -score
     return score
 
-def matched_entries2(list_of_word, dict_of_sets, stemmed=False):
+def matched_entries(list_of_word, dict_of_sets, stemmed=False, mono=False):
     """
     returns a dictionary with: {'database disease name key': score}
     for a multiple word entry
     """
-    elenco = {}
+    dictionary = {}
     for name, entry in dict_of_sets.items():
-        exam = words_in_set(list_of_word, entry, stemmed=stemmed)
-        if exam != 0:
-            elenco[name]=exam
-    return elenco
+        score = words_in_set(list_of_word, entry, stemmed=stemmed)
+        if mono:
+            if score<0:
+                if len(entry)==1:
+                    score=1
+        if score != 0:
+            dictionary[name]=score
+    return dictionary
 
-def best_match(list_of_word, dict_of_sets, stemmed=False):
+def best_match(list_of_word, dict_of_sets, stemmed=False, mono=False):
     """lis_of_word already tokenized"""
-    
-    # if len(lis_of_word) == 1:
-    #     elenco = matched_entries(lis_of_word, dict_of_sets, stemmed=stemmed)
-    # else:
-    elenco = matched_entries2(list_of_word, dict_of_sets, stemmed=stemmed)
+
+    dictionary = matched_entries(list_of_word, dict_of_sets, stemmed=stemmed, mono=mono)
     best_count=0
     best_entry=''
     best_list = []
-    for entry, count in elenco.items():
+    for entry, count in dictionary.items():
         if count == best_count:
             best_list.append(entry)
         elif count > best_count:

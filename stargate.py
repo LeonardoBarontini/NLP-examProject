@@ -10,7 +10,7 @@ ls = LancasterStemmer()
 from snap_database_classes import D_MeshMiner_miner_disease_instance
 
 
-class Stargate_to_SNAP:
+class Stargate_to_SNAP_diseases:
     """
     Stargate class that handles the creation of connections with the SNAP table(s)
     """
@@ -18,6 +18,7 @@ class Stargate_to_SNAP:
         self.SNAP_data = D_MeshMiner_miner_disease_instance()#'D-MeshMiner_miner-disease.tsv')
         self.dis_synon_dicts = self.SNAP_data.create_disease_name_synonyms_dicts()
         self.dis_desc_dicts = self.SNAP_data.create_disease_name_description_dicts()
+        self.dis_name_only_dict = self.SNAP_data.create_disease_name_only_dicts()
 
     def disease_stargate_link_with_check(self, start_link_dict, progress=False):
         """
@@ -32,6 +33,7 @@ class Stargate_to_SNAP:
         start_link = start_link_dict.items()
         end_link = self.dis_synon_dicts
         end_link2 = self.dis_desc_dicts
+        end_link3 = self.dis_name_only_dict
         if progress:
             count=0
             total=len(start_link)
@@ -57,6 +59,13 @@ class Stargate_to_SNAP:
                 for word in disease_word_list:
                     stemmed_disease_list.append(ls.stem(word))
                 best_list = best_match(stemmed_disease_list, end_link, stemmed=True)
+            if best_list == ['']:      #let's get back the mono named diseases  [+2%_RX-SNAP]
+                best_list = best_match(disease_word_list, end_link3, mono=True)
+            if best_list == ['']:      #I sed let's get them back!      [+2%_RX-SNAP]
+                stemmed_disease_list = []
+                for word in disease_word_list:
+                    stemmed_disease_list.append(ls.stem(word))
+                best_list = best_match(stemmed_disease_list, end_link3, stemmed=True, mono=True)
             
             if best_list == ['']:      #ok i give up.... no match for you
                     check_dict[disease]=['']
