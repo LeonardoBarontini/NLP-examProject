@@ -15,13 +15,16 @@ la descrizione del progetto
 Python version(s)
 ***********
 Project developed in python 3.8.5
+
 Project tested in python 3.8.5
 
 ***********
 Documentation links
 ***********
-:ref:'tutorial'
-:ref:'how-to'
-:ref:'reference'
+`Tutorial <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/Tutorial.rst>`_
 
-:doc:`explanation`
+`How-to <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/How-to.rst>`_
+
+`Reference <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/Reference.rst>`_
+
+`Explanation <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/Explanation.rst>`_
