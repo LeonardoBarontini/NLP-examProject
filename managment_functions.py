@@ -7,7 +7,6 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 ps = PorterStemmer()
 
-from statistics import mean, stdev
 
 # @deprecated
 # def is_disease(string):
@@ -189,31 +188,6 @@ def add_relation_to_dict(dictionary, id_key, id_data):
     return dictionary
 
 
-def lenghts_mean_and_stdev(lis):
-    lenghts = []
-    for el in lis:
-        lenghts.append(len(el))
-    m = mean(lenghts)
-    std = stdev(lenghts)
-    return m, std
-
-def suspiciously_long_entry(lis, lenght):
-    warnings = []
-    for el in lis:
-        if len(el)>lenght:
-            warnings.append(el)
-    return warnings
-
-def suspiciously_written_entry(lis):
-    warnings = []
-    bad_symbols = ['1','2','3','4','5','6','7','8','9','0',':','!','?',';','.',',','(',')',"/",'\\','-','+']
-    for el in lis:
-        for symb in bad_symbols:
-            if symb in el:
-                warnings.append(el)
-                break
-    return warnings
-
 def count_elements(lis):
     """
     returns a list with the respective frequencies of every element of the list
@@ -233,23 +207,7 @@ def frequency_dictionary(lis):
         dictionary[el] = lis.count(el)
     return dictionary
 
-###########
 
-
-###########
-
-# word_list = []
-# stem_list = []
-# def create_word_stem_lists(word_list):
-#     for element in symptoms_diseases_list:
-#         formatted_element = format_string(element)
-#         # if len(formatted_element)>2*mean_lenght()
-#         tokenized_element = word_tokenize(formatted_element)
-#         tokenized_and_stopped_element = [w for w in tokenized_element if w not in stop_words]
-#         #stemmed_element = [ps.stem(w) for w in tokenized_and_stopped_element]
-#         word_list = word_list + tokenized_and_stopped_element
-#         #stem_list.append(stemmed_element)
-#     return word_list
 
 
 

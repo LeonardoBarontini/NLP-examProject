@@ -78,6 +78,14 @@ for key, el in check_dict.items():
     if el == ['']:
         lisa1.append(key)
 
+tsv_file = open('RXdis-links.tsv', 'w')
+tsv_file.truncate()
+tsv_file.write('# ID_start\tID_end\n')
+for id_start, list_id_end in check_dict.items():
+    for id_end in list_id_end:
+        tsv_file.write(id_start+'\t'+id_end+'\n')
+tsv_file.close()
+
 print("""\n---> starting RX-SNAP symptom overlapping""")
 start = time()
 print(datetime.fromtimestamp(start).time())
@@ -106,62 +114,70 @@ for key, el in check_dict.items():
     if el == ['']:
         lisa1.append(key)
 
+tsv_file = open('RXsym-links.tsv', 'w')
+tsv_file.truncate()
+tsv_file.write('# ID_start\tID_end\n')
+for id_start, list_id_end in check_dict.items():
+    for id_end in list_id_end:
+        tsv_file.write(id_start+'\t'+id_end+'\n')
+tsv_file.close()
+
 
 ############################## disgenet-SNAP overlapping
-# print(
-#       """
-#       #########   Processing disgenet data   #########
-#       """
-#       )
-# print("""\n---> start loading DisgenetData""")
-# start = time()
-# print(datetime.fromtimestamp(start).time())
+print(
+      """
+      #########   Processing disgenet data   #########
+      """
+      )
+print("""\n---> start loading DisgenetData""")
+start = time()
+print(datetime.fromtimestamp(start).time())
 
 
-# DisgenetData = Disgenet_instance('disgenet_2020.db')
-# DisgenetData.create_disease_dict()
+DisgenetData = Disgenet_instance('disgenet_2020.db')
+DisgenetData.create_disease_dict()
 
-# end = time()
-# print('\rfinished loading in '+str(end-start)+' seconds')
-# print("""\n---> starting disgenet-SNAP disease overlapping""")
-# start = time()
-# print(datetime.fromtimestamp(start).time())
-
-
-# disgenet_to_SNAP_links, check_dict = stargateD.disease_stargate_link_with_check(DisgenetData.disease_dictionary, progress=True)
+end = time()
+print('\rfinished loading in '+str(end-start)+' seconds')
+print("""\n---> starting disgenet-SNAP disease overlapping""")
+start = time()
+print(datetime.fromtimestamp(start).time())
 
 
-# end = time()
-# print('\rfinished loading in '+str(end-start)+' seconds')
+disgenet_to_SNAP_links, check_dict = stargateD.disease_stargate_link_with_check(DisgenetData.disease_dictionary, progress=True)
 
 
-# count=0
-# for key, el in disgenet_to_SNAP_links.items():
-#     if el == ['']:
-#         pass
-#     else:
-#         count+=1
-# total = len(DisgenetData.disease_dictionary)
-# over = (count/total)*100
-# overlap = int((count/total)*100)
-# print('overlap between disgenetData and SNAPdata diseases: '+str(overlap)+'%')
-# print(over)
-
-# lisa2=[]     #the ones left unlinked
-# for key, el in check_dict.items():
-#     if el == ['']:
-#         lisa2.append(key)
+end = time()
+print('\rfinished loading in '+str(end-start)+' seconds')
 
 
+count=0
+for key, el in disgenet_to_SNAP_links.items():
+    if el == ['']:
+        pass
+    else:
+        count+=1
+total = len(DisgenetData.disease_dictionary)
+over = (count/total)*100
+overlap = int((count/total)*100)
+print('overlap between disgenetData and SNAPdata diseases: '+str(overlap)+'%')
+print(over)
+
+lisa2=[]     #the ones left unlinked
+for key, el in check_dict.items():
+    if el == ['']:
+        lisa2.append(key)
 
 
-# tsv_file = open('nomedelfile.tsv', 'w')
-# tsv_file.truncate()
-# tsv_file.write('# ID_start\tID_end\n')
-# for id_start, list_id_end in check_dict.items():
-#     for id_end in list_id_end:
-#         tsv_file.write(id_start+'\t'+id_end+'\n')
-# tsv_file.close()
+
+
+tsv_file = open('disgenet-links.tsv', 'w')
+tsv_file.truncate()
+tsv_file.write('# ID_start\tID_end\n')
+for id_start, list_id_end in check_dict.items():
+    for id_end in list_id_end:
+        tsv_file.write(id_start+'\t'+id_end+'\n')
+tsv_file.close()
 
 
 

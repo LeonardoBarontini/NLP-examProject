@@ -76,16 +76,31 @@ def best_match(list_of_word, dict_of_sets, stemmed=False, mono=False):
 
 
 
-#@not implemented yet
+#########################
+##  TO BE IMPLEMENTED  ##
+#########################
 # def swap_typo():
 # 	#check for word permutations
 
-
-#@not implemented yet
 # def proximity_typo():
 # 	#check for proximity missclicks
 
+# def suspiciously_long_entry(lis, lenght):
+#     warnings = []
+#     for el in lis:
+#         if len(el)>lenght:
+#             warnings.append(el)
+#     return warnings
 
+# def suspiciously_written_entry(lis):
+#     warnings = []
+#     bad_symbols = ['1','2','3','4','5','6','7','8','9','0',':','!','?',';','.',',','(',')',"/",'\\','-','+']
+#     for el in lis:
+#         for symb in bad_symbols:
+#             if symb in el:
+#                 warnings.append(el)
+#                 break
+#     return warnings
     
 
 
