@@ -1,5 +1,4 @@
-.. _explanation:
-
+============
 Explanation
 ============
 
