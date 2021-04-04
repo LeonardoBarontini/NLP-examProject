@@ -162,9 +162,13 @@ class RX_instance:
         self.c.execute("CREATE TABLE IF NOT EXISTS diseases(serial TEXT PRIMARY KEY NOT NULL, name TEXT UNIQUE);")
         self.c.execute("CREATE TABLE IF NOT EXISTS symptoms(serial TEXT PRIMARY KEY NOT NULL, name TEXT UNIQUE);")
         self.c.execute("CREATE TABLE IF NOT EXISTS drugs(serial TEXT PRIMARY KEY NOT NULL, name TEXT UNIQUE);")
+        self.c.execute("DROP TABLE IF EXISTS diseases_to_symptoms_relat;")
         self.c.execute("CREATE TABLE IF NOT EXISTS diseases_to_symptoms_relat(disease_id TEXT ,symptom_id TEXT,FOREIGN KEY(disease_id) REFERENCES diseases(serial) ON DELETE CASCADE,FOREIGN KEY(symptom_id) REFERENCES symptoms(serial) ON DELETE CASCADE);")
+        self.c.execute("DROP TABLE IF EXISTS symptoms_to_symptoms_relat;")
         self.c.execute("CREATE TABLE IF NOT EXISTS symptoms_to_symptoms_relat(symptom_id TEXT ,related_symptom_id TEXT,FOREIGN KEY(symptom_id) REFERENCES symptoms(serial) ON DELETE CASCADE,FOREIGN KEY(related_symptom_id) REFERENCES symptoms(serial) ON DELETE CASCADE);")
+        self.c.execute("DROP TABLE IF EXISTS diseases_to_drugs_relat;")
         self.c.execute("CREATE TABLE IF NOT EXISTS diseases_to_drugs_relat(disease_id TEXT ,drug_id TEXT,FOREIGN KEY(disease_id) REFERENCES diseases(serial) ON DELETE CASCADE,FOREIGN KEY(drug_id) REFERENCES drugs(serial) ON DELETE CASCADE);")
+        self.c.execute("DROP TABLE IF EXISTS symptoms_to_drugs_relat;")
         self.c.execute("CREATE TABLE IF NOT EXISTS symptoms_to_drugs_relat(symptom_id TEXT ,drug_id TEXT,FOREIGN KEY(symptom_id) REFERENCES symptoms(serial) ON DELETE CASCADE,FOREIGN KEY(drug_id) REFERENCES drugs(serial) ON DELETE CASCADE);")
 
         return 'created database\n'

@@ -186,10 +186,13 @@ def create_tsv_table_file(filename, output_dict):
 def create_stargate_network_table(database_name, output_dict, table_name, initial_ID_table_column_ref, final_ID_table_column_ref):
     database = sqlite3.connect(database_name)
     c = database.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS "+table_name+"(Initial_ID TEXT PRIMARY KEY NOT NULL, Final_ID TEXT, Score TEXT, Status TEXT, FOREIGN KEY(Initial_ID) REFERENCES "+initial_ID_table_column_ref+" ON DELETE CASCADE, FOREIGN KEY(Final_ID) REFERENCES "+final_ID_table_column_ref+" ON DELETE CASCADE);")
+    initial_column = initial_ID_table_column_ref.split('(')[1].split(')')[0]
+    final_column = final_ID_table_column_ref.split('(')[1].split(')')[0]
+    c.execute("DROP TABLE IF EXISTS "+table_name+";")
+    c.execute("CREATE TABLE IF NOT EXISTS "+table_name+"("+initial_column+" TEXT NOT NULL, "+final_column+" TEXT, Score TEXT, Status TEXT, FOREIGN KEY("+initial_column+") REFERENCES "+initial_ID_table_column_ref+" ON DELETE CASCADE, FOREIGN KEY("+final_column+") REFERENCES "+final_ID_table_column_ref+" ON DELETE CASCADE);")
     for id_start, (lis, score, chek) in output_dict.items():
         for id_end in lis:
-            c.execute("INSERT OR IGNORE INTO "+table_name+" (Initial_ID, Final_ID, Score, Status) VALUES(?,?,?,?);",(id_start, id_end, score, chek))
+            c.execute("INSERT OR IGNORE INTO "+table_name+" ("+initial_column+", "+final_column+", Score, Status) VALUES(?,?,?,?);",(id_start, id_end, score, chek))
     database.commit()
     database.close()
     return 'Done'

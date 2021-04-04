@@ -1,3 +1,13 @@
+--- Stargate big database ---
+updated disease_stargate_link to match disease_stargate_link_with_check
+D_MeshMiner_miner_disease_instance class now has a create_SNAP_disease_table function
+added create_stargate_network_table calls to main module to populate Stargate_big_database.db
+completed G_SynMiner_miner_geneHUGO_instance also with create_SNAP_gene_table
+created Stargate_to_SNAP_gene class
+now every function that creates a relational table, first drops it to prevent data doubling (or more)
+added create_gene_dict function to Disgenet_instance class
+updated main module to process Disgenet-SNAP gene linking
+
 --- adding score and verification to network table ---
 now best_match returns the score with the best list in tuple form
 stargate methods modified to handle new best_match output

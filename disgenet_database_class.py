@@ -85,9 +85,12 @@ class Disgenet_instance:
     def create_disease_dict(self):
         self.disease_dictionary = {}
         for index, row in self.diseaseAttributes.iterrows():
-            self.disease_dictionary[row['diseaseId']]=row['diseaseName']
+            self.disease_dictionary[row['diseaseNID']]=row['diseaseName']
     
-    
+    def create_gene_dict(self):
+        self.gene_dictionary = {}
+        for index, row in self.geneAttributes.iterrows():
+            self.gene_dictionary[row['geneNID']]=(row['geneName'], row['geneDescription'])
     
     
     
