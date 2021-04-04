@@ -1,3 +1,21 @@
+--- adding score and verification to network table ---
+now best_match returns the score with the best list in tuple form
+stargate methods modified to handle new best_match output
+> now stargate outputs a dictionary in the form {'initial id': ([list of best ids], score, 'unchecked')}
+> reordered search steps to match score "weighting"
+> added score differentiation between different matching criteria
+main module modified to manage new outputs   
+some main module processes have been moved to managment_functions module and became:
+> start_timer_at, stop_timer_at, check_overlap_percentage
+> check_unlinked, create_tsv_table_file
+added create_stargate_network_table for next patch
+added process wrapping method to RX_database_class
+
+--- documentation try # ---
+added .tsv output file in main module for every network table created
+readme file now has something on it
+created explanation, tutorial, reference, and how-to documentation files
+
 --- unlimited powerrr ---
 enhanced stargate matching function, now with 91%+ coverage
 upgraded main module, now with more processing and better process monitoring

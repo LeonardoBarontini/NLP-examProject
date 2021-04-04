@@ -226,3 +226,14 @@ class RX_instance:
         self.database.commit()
         self.database.close()
 
+    def process(self, database_name):
+        """
+        wrapper method for processing
+        """
+        self.create_main_lists()
+        self.create_main_dicts()
+        self.create_drug_list()
+        self.create_drug_dict()
+        self.create_relation_dicts()
+        self.create_RX_database(database_name)
+        self.populate()

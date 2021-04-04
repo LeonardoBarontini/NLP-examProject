@@ -54,21 +54,23 @@ def matched_entries(list_of_word, dict_of_sets, stemmed=False, mono=False):
     return dictionary
 
 def best_match(list_of_word, dict_of_sets, stemmed=False, mono=False):
-    """lis_of_word already tokenized"""
-
+    """
+    
+    lis_of_word already tokenized
+    """
     dictionary = matched_entries(list_of_word, dict_of_sets, stemmed=stemmed, mono=mono)
-    best_count=0
-    best_entry=''
+    best_score = 0
+    best_entry = ''
     best_list = []
-    for entry, count in dictionary.items():
-        if count == best_count:
+    for entry, score in dictionary.items():
+        if score == best_score:
             best_list.append(entry)
-        elif count > best_count:
-            best_count = count
+        elif score > best_score:
+            best_score = score
             best_entry = entry
             best_list = []
     best_list.append(best_entry)
-    return best_list
+    return (best_score, best_list)
 
 
 

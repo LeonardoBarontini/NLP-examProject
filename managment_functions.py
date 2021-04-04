@@ -2,7 +2,8 @@
 colection of functions for general management
 """
 
-#import nltk
+import sqlite3
+from datetime import datetime
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 ps = PorterStemmer()
@@ -66,36 +67,6 @@ def substring_in_elements(lis, substring):
     return element_list
 
 
-# @deprecated
-# def create_main_lists(dictionary, disease_racognition_string):
-#     """
-#     passing the keys of the main object of the database (supposing they are diseases and symptoms),
-#     this funcion returns a tuple with the list of, respectively, the diseases and the symptoms,
-#     where the diseases are identified by the disease_racognition_string.
-#     """
-#     symptoms_diseases_list = list(dictionary.keys())
-#     diseases_list=[]
-#     symptoms_list=[]
-#     for element in symptoms_diseases_list:
-#         formatted_element = format_string(element)
-
-#         if disease_racognition_string in element:
-#             diseases_list.append(formatted_element)
-#         else:
-#             symptoms_list.append(formatted_element)
-
-#         for sym in dictionary[element]['Related']:
-#             symptom = format_string(sym)
-#             if symptom not in symptoms_list: symptoms_list.append(symptom)
-
-#         for dis in dictionary[element]['Causes']:
-#             disease = format_string(dis)
-#             if disease not in diseases_list: diseases_list.append(disease)
-
-
-#     return diseases_list, symptoms_list
-
-
 def add_unique_disease_id(lis, digits=6):
     """
     warning: assuming lis has unique elements
@@ -128,22 +99,6 @@ def add_unique_symptom_id(lis, digits=6):
 
     return id_symptoms_dict
 
-# @deprecated
-# def create_drug_list(dictionary):
-#     """
-#     takes the json data dictionary and collects all the 'Drugs' found in there.
-#     return a unique list with all the drugs entries.
-#     """
-#     drug_list = []
-#     for key in dictionary.keys():
-#         data_drug_list = dictionary[key]['Drugs']
-#         for drg in data_drug_list:
-#             drug = format_string(drg)
-#             if drug in drug_list: pass
-#             else:
-#                 drug_list.append(drug)
-
-#     return drug_list
 
 def add_unique_drug_id(lis, digits=6):
     """
@@ -187,6 +142,57 @@ def add_relation_to_dict(dictionary, id_key, id_data):
         dictionary[id_key].append(id_data)
     return dictionary
 
+
+def start_timer_at(time):
+    print(datetime.fromtimestamp(time).time())
+    return time
+
+def stop_timer_at(time, start):
+    print('\rfinished processing in '+str(time-start)+' seconds')
+    return time
+
+def check_overlap_percentage(initial_dataset, dataset_name, link_network, final_dataset_name, precise=False):
+    count=0
+    for key, (lis, score, chek) in link_network.items():
+        if lis == ['']:
+            pass
+        else:
+            count+=1
+    total = len(initial_dataset)
+    over = (count/total)*100
+    overlap = int((count/total)*100)
+    print('overlap between '+dataset_name+' and '+final_dataset_name+' : '+str(overlap)+'%')
+    if precise:
+        print(over)
+    return overlap
+
+def check_unlinked(check_dict):
+    lisa=[]     
+    for key, (lis, score, chek) in check_dict.items():
+        if lis == ['']:
+            lisa.append(key)
+    return lisa
+
+def create_tsv_table_file(filename, output_dict):
+    tsv_file = open(filename, 'w')
+    tsv_file.truncate()
+    tsv_file.write('# ID_start\tID_end\tScore\tStatus\n')
+    for id_start, (lis, score, chek) in output_dict.items():
+        for id_end in lis:
+            tsv_file.write(id_start+'\t'+id_end+'\t'+str(score)+'\t'+chek+'\n')
+    tsv_file.close()
+    return 'Done'
+
+def create_stargate_network_table(database_name, output_dict, table_name, initial_ID_table_column_ref, final_ID_table_column_ref):
+    database = sqlite3.connect(database_name)
+    c = database.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS "+table_name+"(Initial_ID TEXT PRIMARY KEY NOT NULL, Final_ID TEXT, Score TEXT, Status TEXT, FOREIGN KEY(Initial_ID) REFERENCES "+initial_ID_table_column_ref+" ON DELETE CASCADE, FOREIGN KEY(Final_ID) REFERENCES "+final_ID_table_column_ref+" ON DELETE CASCADE);")
+    for id_start, (lis, score, chek) in output_dict.items():
+        for id_end in lis:
+            c.execute("INSERT OR IGNORE INTO "+table_name+" (Initial_ID, Final_ID, Score, Status) VALUES(?,?,?,?);",(id_start, id_end, score, chek))
+    database.commit()
+    database.close()
+    return 'Done'
 
 def count_elements(lis):
     """
