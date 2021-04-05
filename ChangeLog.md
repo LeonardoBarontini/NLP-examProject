@@ -1,3 +1,9 @@
+--- Documentation and tests 1 ---
+added docstring and tests for words_in_set
+added docstring and tests for matched_entries
+added docstring and tests for best_match
+added NLP functions Explanation and Reference
+
 --- Stargate big database ---
 updated disease_stargate_link to match disease_stargate_link_with_check
 D_MeshMiner_miner_disease_instance class now has a create_SNAP_disease_table function

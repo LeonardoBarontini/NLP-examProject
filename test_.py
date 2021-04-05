@@ -12,7 +12,10 @@ from managment_functions import substring_in_elements
 from managment_functions import format_string
 from managment_functions import get_id_of_string
 
-######  just a note, placeholder test
+from nlp import words_in_set
+from nlp import matched_entries
+from nlp import best_match
+######  placeholder test
 # from hypothesis import given
 # import hypothesis.strategies as st
 # @given(inp = st.text())
@@ -21,11 +24,13 @@ from managment_functions import get_id_of_string
 ######
 
 def manual_test_input_type(function):
-    """
-    helper function for manual input type testing.
+    """Helper function for manual input type testing.
+    
     ___not for automate testing___
-    checks for TypeError raising in the passed function.
-    at least one test should fail unless the passed function takes an object in input.
+    
+    Checks for TypeError raising in the passed function.
+    At least one test should fail unless the passed function
+    takes in input a "non standard type".
     """
     types = [1, [1], (1), {'1':1}, '1', None]
     for typ in types:
@@ -36,7 +41,7 @@ def manual_test_input_type(function):
                 "\nDoesn't raise exceptions for input " + str(type(typ)) +
                 ", is this the intended input type?"
                 )
-            #pytest.raises(TypeError, function, typ)      #uncomment to get traceback
+            #pytest.raises(TypeError, function, typ)   #uncomment to get traceback
 
 
 
@@ -301,17 +306,112 @@ def test_get_id_of_string_key_not_found():
     output_string = None
     assert get_id_of_string(input_dictionary, input_string) == output_string
 
+# ==================================================
+# TESTING           words_in_set
+# ==================================================
 
+def test_words_in_set_correct_1():
+    input_list_of_words = ['hello', 'world']
+    input_sset = {"hello"}
+    output_score = -1
+    assert words_in_set(input_list_of_words, input_sset) == output_score
 
+def test_words_in_set_correct_2():
+    input_list_of_words = ['hello', 'world', 'Italy']
+    input_sset = {"hello", 'world'}
+    output_score = 2
+    assert words_in_set(input_list_of_words, input_sset) == output_score
 
+def test_words_in_set_mono_word_list():
+    input_list_of_words = ['hello']
+    input_sset = {"hello", 'world'}
+    output_score = 1
+    assert words_in_set(input_list_of_words, input_sset) == output_score
 
+def test_words_in_set_empty_set():
+    input_list_of_words = ['hello']
+    input_sset = set()
+    output_score = 0
+    assert words_in_set(input_list_of_words, input_sset) == output_score
 
+def test_words_in_set_empty_list():
+    input_list_of_words = []
+    input_sset = {"hello", 'world'}
+    output_score = 0
+    assert words_in_set(input_list_of_words, input_sset) == output_score
 
+def test_words_in_set_no_match():
+    input_list_of_words = ['what?']
+    input_sset = {"hello", 'world'}
+    output_score = 0
+    assert words_in_set(input_list_of_words, input_sset) == output_score
 
+def test_words_in_set_stemmed():
+    input_list_of_words = ['hel', 'worl', 'Ital']
+    input_sset = {"hello", 'world'}
+    output_score = 2
+    assert words_in_set(input_list_of_words, input_sset, stemmed=True) == output_score
+    
+# ==================================================
+# TESTING           matched_entries
+# ==================================================
 
+def test_matched_entries_correct_1():
+    input_list_of_words = ['hello', 'world']
+    input_dict_of_sets = {
+                        'hello':{'hello', 'ciao', 'salut'},
+                        'hello world':{'hello', 'world', 'python'}
+                            }
+    output_dictionary = {'hello': -1, 'hello world': 2}
+    assert matched_entries(input_list_of_words, input_dict_of_sets) == output_dictionary
+    
+def test_matched_entries_mono():
+    input_list_of_words = ['hello', 'world']
+    input_dict_of_sets = {
+                        'hello':{'hello'},
+                        'hello world':{'hello', 'hi', 'python'}
+                            }
+    output_dictionary = {'hello': 1, 'hello world': -1}
+    assert matched_entries(input_list_of_words, input_dict_of_sets, mono=True) == output_dictionary
 
+def test_matched_entries_empty_word_list():
+    input_list_of_words = []
+    input_dict_of_sets = {'hello':{'hello'}}
+    output_dictionary = {}
+    assert matched_entries(input_list_of_words, input_dict_of_sets) == output_dictionary
 
+def test_matched_entries_empty_dictionary_of_sets():
+    input_list_of_words = ['hello', 'world']
+    input_dict_of_sets = {}
+    output_dictionary = {}
+    assert matched_entries(input_list_of_words, input_dict_of_sets) == output_dictionary
 
+# ==================================================
+# TESTING           best_match
+# ==================================================
+
+def test_best_match_corresct_1():
+    input_list_of_words = ['hello', 'world']
+    input_dict_of_sets = {
+                    'hello':{'hello', 'ciao', 'salut'},
+                    'hello world':{'hello', 'world'},
+                    'hello python':{'hello', 'world', 'python'},
+                    'ciao python':{'ciao', 'hello', 'world', 'python'}
+                        }
+    output_tuple = (3, ['ciao python', 'hello python'])
+    assert best_match(input_list_of_words, input_dict_of_sets) == output_tuple
+
+def test_best_match_empty_word_list():
+    input_list_of_words = []
+    input_dict_of_sets = {'hello':{'hello'}}
+    output_tuple = (0, [''])
+    assert best_match(input_list_of_words, input_dict_of_sets) == output_tuple
+
+def test_best_match_empty_dictionary_of_sets():
+    input_list_of_words = ['hello', 'world']
+    input_dict_of_sets = {}
+    output_tuple = (0, [''])
+    assert best_match(input_list_of_words, input_dict_of_sets) == output_tuple   
 
 # to be implemented?
 # def test_for_double_dict_entries():

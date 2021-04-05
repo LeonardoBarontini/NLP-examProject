@@ -1,5 +1,5 @@
 ###################################################
-Stargate: a network creator, database linking tool.
+Stargate: a database linking / network creator.
 ###################################################
 
 .. contents:: Quick access links
