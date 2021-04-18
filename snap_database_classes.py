@@ -93,7 +93,7 @@ class G_SynMiner_miner_geneHUGO_instance:
     """
     #placeholder_general_variable = True
 
-    def __init__(self):#, tsv_table):
+    def __init__(self):
         """
         loads the table in a pandas dataframe
         """

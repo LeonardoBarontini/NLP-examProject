@@ -1,3 +1,11 @@
+--- Documentation and tests 2 ---
+slightly improved link quality in disease links, introducing word stopping
+added tutorial for base use of the project
+completed first version of project explanation
+added docstrings for Disgenet_instance class and relative methods
+added reference for Disgenet_instance class and relative methods
+added tests for Disgenet_instance class and relative methods
+
 --- Documentation and tests 1 ---
 added docstring and tests for words_in_set
 added docstring and tests for matched_entries

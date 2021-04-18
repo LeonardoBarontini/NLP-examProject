@@ -55,7 +55,7 @@ create_stargate_network_table('Stargate_big_database.db', RX_to_SNAP_disease_lin
 
 end = stop_timer_at(time(),start)
 check_overlap_percentage(RXdata.id_diseases_dict, 'RXdata', RX_to_SNAP_disease_links, 'SNAPdata diseases', precise=True)
-lisa1 = check_unlinked(check_dict)
+unlinked_list1 = check_unlinked(check_dict)
 create_tsv_table_file('RXdis-links.tsv', check_dict)
 
 
@@ -69,7 +69,7 @@ create_stargate_network_table('Stargate_big_database.db', RX_to_SNAP_symptom_lin
 
 end = stop_timer_at(time(),start)
 check_overlap_percentage(RXdata.id_symptoms_dict, 'RXdata', RX_to_SNAP_symptom_links, 'SNAPdata symptom', precise=True)
-lisa2 = check_unlinked(check_dict)
+unlinked_list2 = check_unlinked(check_dict)
 create_tsv_table_file('RXsym-links.tsv', check_dict)
 
 
@@ -97,17 +97,17 @@ create_stargate_network_table('Stargate_big_database.db', disgenet_to_SNAP_links
 
 
 end = stop_timer_at(time(),start)
-check_overlap_percentage(DisgenetData.disease_dictionary, 'disgenetData', disgenet_to_SNAP_links, 'SNAPdata diseases')
-lisa3 = check_unlinked(check_dict)
+check_overlap_percentage(DisgenetData.disease_dictionary, 'disgenetData', disgenet_to_SNAP_links, 'SNAPdata diseases', precise=True)
+unlinked_list3 = check_unlinked(check_dict)
 create_tsv_table_file('disgenet-disease-links.tsv', check_dict)
 
-
+#start = start_timer_at(time())
 
 DisgenetData.unload_diseaseAttributes_table()
 DisgenetData.load_geneAttributes_table()
 DisgenetData.create_gene_dict()
 
-end = stop_timer_at(time(),start)
+#end = stop_timer_at(time(),start)
 print("""\n---> starting disgenet-SNAP gene overlapping""")
 start = start_timer_at(time())
 
@@ -117,8 +117,8 @@ create_stargate_network_table('Stargate_big_database.db', disgenet_to_SNAP_links
 
 
 end = stop_timer_at(time(),start)
-check_overlap_percentage(DisgenetData.gene_dictionary, 'disgenetData', disgenet_to_SNAP_links, 'SNAPdata gene')
-lisa4 = check_unlinked(check_dict)
+check_overlap_percentage(DisgenetData.gene_dictionary, 'disgenetData', disgenet_to_SNAP_links, 'SNAPdata gene', precise=True)
+unlinked_list4 = check_unlinked(check_dict)
 create_tsv_table_file('disgenet-gene-links.tsv', check_dict)
 
 

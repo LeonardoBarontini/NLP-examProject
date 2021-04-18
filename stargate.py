@@ -6,6 +6,8 @@ from nltk.stem import LancasterStemmer
 ls = LancasterStemmer()
 from nltk.stem.snowball import EnglishStemmer
 es = EnglishStemmer()
+from nltk.corpus import stopwords
+stop_words = set(stopwords.words('english'))
 
 from snap_database_classes import D_MeshMiner_miner_disease_instance
 from snap_database_classes import G_SynMiner_miner_geneHUGO_instance
@@ -48,53 +50,48 @@ class Stargate_to_SNAP_diseases:
                 #the following results are obtained with progressive addition to the search
                     #no match? first try this [RX-SNAP overlaps: diseases=79%(+14%), symptoms=58%(+27%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
+                stemmed_disease_list_es = []
                 for word in disease_word_list:
-                    stemmed_disease_list.append(es.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination1, stemmed=True)
+                    stemmed_disease_list_es.append(es.stem(word))
+                score, best_list = best_match(stemmed_disease_list_es, destination1, stemmed=True)
                 score = str(score)+'a'
                     #and then this please [RX-SNAP overlaps: diseases=81%(+2%), symptoms=63%(+5%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
+                stemmed_disease_list_ls = []
                 for word in disease_word_list:
-                    stemmed_disease_list.append(ls.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination1, stemmed=True)
+                    stemmed_disease_list_ls.append(ls.stem(word))
+                score, best_list = best_match(stemmed_disease_list_ls, destination1, stemmed=True)
                 score = str(score)+'b'
                     #yet no match? what abount this!!!  [RX-SNAP overlaps: diseases=87%(+6%), symptoms=63%(+13%)]
-            if best_list == ['']:      
-                score, best_list = best_match(disease_word_list, destination2)
+            if best_list == ['']:
+                stopped_word_list = [w for w in disease_word_list if w not in stop_words]
+                score, best_list = best_match(stopped_word_list, destination2)
                 score = str(score)+'c'
                     #nothing yet? what abount this one?!  [RX-SNAP overlaps: diseases=90%(+3%), symptoms=82%(+19%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(es.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination2, stemmed=True)
+                stopped_stemmed_disease_list_es = []
+                for word in stopped_word_list:
+                    stopped_stemmed_disease_list_es.append(es.stem(word))
+                score, best_list = best_match(stopped_stemmed_disease_list_es, destination2, stemmed=True)
                 score = str(score)+'d'
                     #And this one!!!  [RX-SNAP overlaps: diseases=91%(+1%), symptoms=85%(+3%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(ls.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination2, stemmed=True)
+                stopped_stemmed_disease_list_ls = []
+                for word in stopped_word_list:
+                    stopped_stemmed_disease_list_ls.append(ls.stem(word))
+                score, best_list = best_match(stopped_stemmed_disease_list_ls, destination2, stemmed=True)
                 score = str(score)+'e'
                     #you refuse to match?!  [RX-SNAP overlaps: diseases=93%(+2%), symptoms=85%(+0.6%)]
             if best_list == ['']:      
                 score, best_list = best_match(disease_word_list, destination3, mono=True)
                 score = str(score)+'f'
                     #Let's get back the mono word ones!      [RX-SNAP overlaps: diseases=94%(+1%), symptoms=89%(+4%)]
-            if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(es.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination3, stemmed=True, mono=True)
+            if best_list == ['']:
+                score, best_list = best_match(stemmed_disease_list_es, destination3, stemmed=True, mono=True)
                 score = str(score)+'g'
                     #I sed let's get them back!      [RX-SNAP overlaps: diseases=94%(+0.5%), symptoms=91%(+2%)]
-            if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(ls.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination3, stemmed=True, mono=True)
+            if best_list == ['']:
+                score, best_list = best_match(stemmed_disease_list_ls, destination3, stemmed=True, mono=True)
                 score = str(score)+'h'
                     #ok i give up.... no match for you
             if best_list == ['']:      
@@ -135,56 +132,51 @@ class Stargate_to_SNAP_diseases:
                 #the following results are obtained with progressive addition to the search
                     #no match? first try this [RX-SNAP overlaps: diseases=79%(+14%), symptoms=58%(+27%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
+                stemmed_disease_list_es = []
                 for word in disease_word_list:
-                    stemmed_disease_list.append(es.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination1, stemmed=True)
+                    stemmed_disease_list_es.append(es.stem(word))
+                score, best_list = best_match(stemmed_disease_list_es, destination1, stemmed=True)
                 score = str(score)+'a'
                     #and then this please [RX-SNAP overlaps: diseases=81%(+2%), symptoms=63%(+5%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
+                stemmed_disease_list_ls = []
                 for word in disease_word_list:
-                    stemmed_disease_list.append(ls.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination1, stemmed=True)
+                    stemmed_disease_list_ls.append(ls.stem(word))
+                score, best_list = best_match(stemmed_disease_list_ls, destination1, stemmed=True)
                 score = str(score)+'b'
                     #yet no match? what abount this!!!  [RX-SNAP overlaps: diseases=87%(+6%), symptoms=63%(+13%)]
-            if best_list == ['']:      
-                score, best_list = best_match(disease_word_list, destination2)
+            if best_list == ['']:
+                stopped_word_list = [w for w in disease_word_list if w not in stop_words]
+                score, best_list = best_match(stopped_word_list, destination2)
                 score = str(score)+'c'
                     #nothing yet? what abount this one?!  [RX-SNAP overlaps: diseases=90%(+3%), symptoms=82%(+19%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(es.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination2, stemmed=True)
+                stopped_stemmed_disease_list_es = []
+                for word in stopped_word_list:
+                    stopped_stemmed_disease_list_es.append(es.stem(word))
+                score, best_list = best_match(stopped_stemmed_disease_list_es, destination2, stemmed=True)
                 score = str(score)+'d'
                     #And this one!!!  [RX-SNAP overlaps: diseases=91%(+1%), symptoms=85%(+3%)]
             if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(ls.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination2, stemmed=True)
+                stopped_stemmed_disease_list_ls = []
+                for word in stopped_word_list:
+                    stopped_stemmed_disease_list_ls.append(ls.stem(word))
+                score, best_list = best_match(stopped_stemmed_disease_list_ls, destination2, stemmed=True)
                 score = str(score)+'e'
                     #you refuse to match?!  [RX-SNAP overlaps: diseases=93%(+2%), symptoms=85%(+0.6%)]
             if best_list == ['']:      
                 score, best_list = best_match(disease_word_list, destination3, mono=True)
                 score = str(score)+'f'
                     #Let's get back the mono word ones!      [RX-SNAP overlaps: diseases=94%(+1%), symptoms=89%(+4%)]
-            if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(es.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination3, stemmed=True, mono=True)
+            if best_list == ['']:
+                score, best_list = best_match(stemmed_disease_list_es, destination3, stemmed=True, mono=True)
                 score = str(score)+'g'
                     #I sed let's get them back!      [RX-SNAP overlaps: diseases=94%(+0.5%), symptoms=91%(+2%)]
-            if best_list == ['']:      
-                stemmed_disease_list = []
-                for word in disease_word_list:
-                    stemmed_disease_list.append(ls.stem(word))
-                score, best_list = best_match(stemmed_disease_list, destination3, stemmed=True, mono=True)
+            if best_list == ['']:
+                score, best_list = best_match(stemmed_disease_list_ls, destination3, stemmed=True, mono=True)
                 score = str(score)+'h'
                     #ok i give up.... no match for you
-            if best_list == ['']:      
+            if best_list == ['']:
                     stargate_link_to_SNAP[ID]=([''], None,'unchecked')
                     
             else:

@@ -4,6 +4,9 @@ general module for testing.
 
 import pytest
 from _pytest.outcomes import Failed
+import sqlite3
+import pandas
+
 #from managment_functions import is_disease
 from managment_functions import add_unique_disease_id
 from managment_functions import add_unique_symptom_id
@@ -15,6 +18,9 @@ from managment_functions import get_id_of_string
 from nlp import words_in_set
 from nlp import matched_entries
 from nlp import best_match
+
+from disgenet_database_class import Disgenet_instance
+
 ######  placeholder test
 # from hypothesis import given
 # import hypothesis.strategies as st
@@ -391,7 +397,7 @@ def test_matched_entries_empty_dictionary_of_sets():
 # ==================================================
 
 def test_best_match_corresct_1():
-    input_list_of_words = ['hello', 'world']
+    input_list_of_words = ['hello', 'world', 'python']
     input_dict_of_sets = {
                     'hello':{'hello', 'ciao', 'salut'},
                     'hello world':{'hello', 'world'},
@@ -412,6 +418,49 @@ def test_best_match_empty_dictionary_of_sets():
     input_dict_of_sets = {}
     output_tuple = (0, [''])
     assert best_match(input_list_of_words, input_dict_of_sets) == output_tuple   
+
+# ==================================================
+# TESTING           Disgenet_instance
+# ==================================================
+
+inp = Disgenet_instance("disgenet_2020.db")
+
+
+def test_class_instanciation():
+    assert isinstance(inp.database, sqlite3.Connection) == isinstance(sqlite3.connect("disgenet_2020.db"), sqlite3.Connection) 
+    assert inp.disease2class == None
+    assert isinstance(inp.diseaseAttributes, pandas.core.frame.DataFrame) == isinstance(pandas.read_sql_query("SELECT * FROM diseaseAttributes", inp.database), pandas.core.frame.DataFrame)
+    assert inp.diseaseClass == None
+    assert inp.geneAttributes == None
+    assert inp.geneDiseaseNetwork == None
+    assert inp.variantAttributes == None
+    assert inp.variantDiseaseNetwork == None
+    assert inp.variantGene == None
+
+
+def test_table_unload_and_load():
+    inp.unload_diseaseAttributes_table()
+    assert inp.diseaseAttributes == None
+    
+    inp.load_variantGene_table()
+    assert isinstance(inp.variantGene, pandas.core.frame.DataFrame) == isinstance(pandas.read_sql_query("SELECT * FROM variantGene", inp.database), pandas.core.frame.DataFrame)
+
+
+def test_create_disease_list():
+    inp.diseaseAttributes = {'diseaseName':('1','2','3','4')}
+    inp.create_disease_list()
+    assert inp.disease_list == ['1','2','3','4']
+
+def test_create_disease_dict():
+    inp.diseaseAttributes = pandas.DataFrame({'diseaseNID':['1','2','3'], 'diseaseName':['a', 'b', 'c']})
+    inp.create_disease_dict()
+    assert inp.disease_dictionary == {'1':'a','2':'b','3':'c'}
+
+def test_create_gene_dict():
+    inp.geneAttributes = pandas.DataFrame({'geneNID':['1','2','3'], 'geneName':['a', 'b', 'c'], 'geneDescription':['y','n','y']})
+    inp.create_gene_dict()
+    assert inp.gene_dictionary == {'1':('a','y'),'2':('b','n'),'3':('c','y')}
+
 
 # to be implemented?
 # def test_for_double_dict_entries():

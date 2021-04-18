@@ -1,6 +1,10 @@
+"""
+Module containing general Natural Language Processing (NLP) functions.
+Defines the words_in_set, matched_entries, best_match functions.
+Imports english stop_words and expands them with bad_words creating taboo_words.
+"""
+
 #from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
-ps = PorterStemmer()
 from nltk.corpus import stopwords
 stop_words = set(stopwords.words('english'))
 bad_words = ['1','2','3','4','5','6','7','8','9','0',
@@ -71,8 +75,7 @@ def matched_entries(list_of_word, dict_of_sets, stemmed=False, mono=False):
                         {
                         'hello':{'hello', 'ciao', 'salut'},
                         'hello world':{'hello', 'world', 'python'}
-                            }
-                        )
+                            })
     {'hello': -1, 'hello world': 2}
     
     The 'stemmed' option is just passed to the words_in_set function.
@@ -85,8 +88,7 @@ def matched_entries(list_of_word, dict_of_sets, stemmed=False, mono=False):
                         'hello':{'hello'},
                         'hello world':{'hello', 'hi', 'python'}
                             },
-                        mono=True
-                        )
+                        mono=True)
     {'hello': 1, 'hello world': -1}
     """
     dictionary = {}
@@ -118,8 +120,7 @@ def best_match(list_of_words, dict_of_sets, stemmed=False, mono=False):
                     'hello world':{'hello', 'world'},
                     'hello python':{'hello', 'world', 'python'},
                     'ciao python':{'ciao', 'hello', 'world', 'python'}
-                        }
-                    )
+                        })
     (3, ['ciao python', 'hello python'])
     
     Note that the first entry with the best score found, is last in the list.

@@ -43,7 +43,7 @@ def format_string(string, boosted=False):
     step5 = step4.replace("'s", '')
     step6 = step5.replace("/", ' or ')
     if boosted:
-        step7 = word_tokenize(step6) #add if stemmed after this?
+        step7 = word_tokenize(step6)
         step8 = set(step7)      #this is the no duplicate words part
         step9 = ' '.join(word for word in step8)
         return step9
@@ -53,15 +53,18 @@ def format_string(string, boosted=False):
 
 def substring_in_elements(lis, substring):
     """
-    inspects the passed list of strings and returns a list containing all the strings
-    that contains the passed substring.
+    inspects the passed list of strings and returns a list containing all
+    the strings that contains the passed substring.
     returns [''] if an empty substring is given.
     """
     if substring == '':
         return ['']
     element_list = []
     for element in lis:
-        if not isinstance(element, str): raise TypeError("An element of the list is not a string.\nSearch for: "+str(element)+'\nIt is a '+str(type(element)))
+        if not isinstance(element, str):
+            raise TypeError("An element of the list is not a string.\n"+
+                            "Search for: "+str(element)+"\n"+
+                            "It is a "+str(type(element)))
         if element.find(substring)!=(-1):
             element_list.append(element)
     return element_list
@@ -74,7 +77,8 @@ def add_unique_disease_id(lis, digits=6):
     """
     #having more than 999999 diseases will be a problem. In that case change the digits to how much more you need.
     if len(lis) > ((10**digits)-1):
-        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\nChange the digits input value so you can handle more entries.')
+        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\n'+
+                         'Change the digits input value so you can handle more entries.')
     id_diseases_dict = {}
     base = 'dis'
     for index, value in enumerate(lis):
@@ -90,7 +94,8 @@ def add_unique_symptom_id(lis, digits=6):
     """
     #having more than 999999 symptoms will be a problem. In that case change the digits to how much more you need.
     if len(lis) > ((10**digits)-1):
-        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\nChange the digits input value so you can handle more entries.')
+        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\n'+
+                         'Change the digits input value so you can handle more entries.')
     id_symptoms_dict = {}
     base = 'sym'
     for index, value in enumerate(lis):
@@ -107,7 +112,8 @@ def add_unique_drug_id(lis, digits=6):
     """
     #having more than 999999 drugs will be a problem. In that case change the digits to how much more you need.
     if len(lis) > ((10**digits)-1):
-        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\nChange the digits input value so you can handle more entries.')
+        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\n'+
+                         'Change the digits input value so you can handle more entries.')
     id_drugs_dict = {}
     base = 'drg'
     for index, value in enumerate(lis):
