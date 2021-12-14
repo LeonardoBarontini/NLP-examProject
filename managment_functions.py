@@ -1,5 +1,5 @@
 """
-colection of functions for general management
+collection of functions for general management
 """
 
 import sqlite3
@@ -7,18 +7,8 @@ from datetime import datetime
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 ps = PorterStemmer()
+from nlp import bad_words
 
-
-# @deprecated
-# def is_disease(string):
-#     """
-#     Returns weather the passed string is a disease or not based on the disease_recognition_string
-#     """
-#     if type(string) is not str: raise TypeError(str(string)+' is not a string.\n')
-#     ###
-#     disease_recognition_string = '_symptoms_and_signs'
-#     ###
-#     return disease_recognition_string in string
 
 
 def format_string(string, boosted=False):
@@ -30,6 +20,7 @@ def format_string(string, boosted=False):
         no "'s"
         no "/" but " or "
         if boosted:
+            no punctuation
             no duplicate words
     then returns it.
     """
@@ -44,40 +35,29 @@ def format_string(string, boosted=False):
     step6 = step5.replace("/", ' or ')
     if boosted:
         step7 = word_tokenize(step6)
-        step8 = set(step7)      #this is the no duplicate words part
-        step9 = ' '.join(word for word in step8)
-        return step9
+        step8 = [w for w in step7 if w not in bad_words]
+        step9 = set(step8)      #this is the no duplicate words part
+        step10 = ' '.join(word for word in step9)
+        return step10
 
     return step6
 
 
-def substring_in_elements(lis, substring):
-    """
-    inspects the passed list of strings and returns a list containing all
-    the strings that contains the passed substring.
-    returns [''] if an empty substring is given.
-    """
-    if substring == '':
-        return ['']
-    element_list = []
-    for element in lis:
-        if not isinstance(element, str):
-            raise TypeError("An element of the list is not a string.\n"+
-                            "Search for: "+str(element)+"\n"+
-                            "It is a "+str(type(element)))
-        if element.find(substring)!=(-1):
-            element_list.append(element)
-    return element_list
-
-
 def add_unique_disease_id(lis, digits=6):
+    """Given a list of diseases returns a dictionary in the form {id:disease}.
+    The id construction is based on the disease's index in the list, wich is
+    filled with zeros to the left, to reach the lenght fixed by the digits value,
+    the resulting string is appended to the base string, giving the id.
+    For example:
+        if at index 114 we have 'Fever'
+        the default dictionary output will be >> dis000114:'Fever'
+    If the passed list il longer than how much the digits can handle, a warning
+    message is displayed while raising ValueError.
+    Warning: lis is assumed to have unique elements.    
     """
-    warning: assuming lis has unique elements
-    returns a dictionary with {id:disease}
-    """
-    #having more than 999999 diseases will be a problem. In that case change the digits to how much more you need.
+    #if you have more than 999999 diseases it'll be a problem. In that case change the digits to how much more you need.
     if len(lis) > ((10**digits)-1):
-        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\n'+
+        raise ValueError('Input list is too long, the resulting ids will be wrongly sorted!\n'+
                          'Change the digits input value so you can handle more entries.')
     id_diseases_dict = {}
     base = 'dis'
@@ -88,13 +68,20 @@ def add_unique_disease_id(lis, digits=6):
     return id_diseases_dict
 
 def add_unique_symptom_id(lis, digits=6):
+    """Given a list of symptoms returns a dictionary in the form {id:symptom}.
+    The id construction is based on the symptom's index in the list, wich is
+    filled with zeros to the left, to reach the lenght fixed by the digits value,
+    the resulting string is appended to the base string, giving the id.
+    For example:
+        if at index 214 we have 'Chills'
+        the default dictionary output will be >> sym000214:'Chills'
+    If the passed list il longer than how much the digits can handle, a warning
+    message is displayed while raising ValueError.
+    Warning: lis is assumed to have unique elements. 
     """
-    warning: assuming lis has unique elements
-    returns a dictionary with {id:symptom}
-    """
-    #having more than 999999 symptoms will be a problem. In that case change the digits to how much more you need.
+    #if you have more than 999999 diseases it'll be a problem. In that case change the digits to how much more you need.
     if len(lis) > ((10**digits)-1):
-        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\n'+
+        raise ValueError('Input list is too long, the resulting ids will be wrongly sorted!\n'+
                          'Change the digits input value so you can handle more entries.')
     id_symptoms_dict = {}
     base = 'sym'
@@ -106,13 +93,20 @@ def add_unique_symptom_id(lis, digits=6):
 
 
 def add_unique_drug_id(lis, digits=6):
+    """Given a list of drugs returns a dictionary in the form {id:drug}.
+    The id construction is based on the drug's index in the list, wich is
+    filled with zeros to the left, to reach the lenght fixed by the digits value,
+    the resulting string is appended to the base string, giving the id.
+    For example:
+        if at index 314 we have 'Aspirin'
+        the default dictionary output will be >> drg000314:'Aspirin'
+    If the passed list il longer than how much the digits can handle, a warning
+    message is displayed while raising ValueError.
+    Warning: lis is assumed to have unique elements.
     """
-    warning: assuming lis has unique elements
-    returns a dictionary with {id:drug}
-    """
-    #having more than 999999 drugs will be a problem. In that case change the digits to how much more you need.
+    #if you have more than 999999 diseases it'll be a problem. In that case change the digits to how much more you need.
     if len(lis) > ((10**digits)-1):
-        raise ValueError('input list is too long, the resulting ids will be wrongly sorted!\n'+
+        raise ValueError('Input list is too long, the resulting ids will be wrongly sorted!\n'+
                          'Change the digits input value so you can handle more entries.')
     id_drugs_dict = {}
     base = 'drg'
@@ -124,11 +118,17 @@ def add_unique_drug_id(lis, digits=6):
 
 
 def get_id_of_string(dictionary, string):
-    """
-    gets in input a dictionary and an input string.
-    the dictionary contains unique ids as keys and strings as data.
-    the function returns the id of the input string if present.
-    IMPORTANT: it's supposed that a string can be related to only one id.
+    """Given a dictionary and a string, searches for the string inside the
+    dictionary's items and, if it founds it, returns the associated key.
+    
+    >>> get_id_of_string({'id1': 'hello', 'id2':'ciao'}, "ciao")
+    'id2'
+    
+    The passed dictionary is supposed to contain unique ids, wich are strings,
+    as keys and strings as items.
+    So function returns the id of the passed string if it's present.
+    Warning: it's supposed that a string can be related to only one id. Every
+    subsequent match will be ignored as only the first is returned.
     """
     for searched_id in dictionary.keys():
         if dictionary[searched_id] == string:
@@ -137,8 +137,14 @@ def get_id_of_string(dictionary, string):
 
 
 def add_relation_to_dict(dictionary, id_key, id_data):
-    """
-    return a dictionary integrated with the new id-id relation
+    """Given a dictionary, an id wich will be a key and an id wich will be an
+    item, the function adds the id_data to the item list of the id_key of the
+    dictionary if that id_data isn't altready present, otherwise does nothing
+    and then returns the updated dictionary.
+    The keys' items are lists of ids.
+    
+    >>>add_relation_to_dict({'dis000314':['sym000041']}, 'dis000014', 'sym000002')
+    {'dis000314':['sym000041'], 'dis000014':['sym000002']}
     """
     if id_key not in dictionary:
         dictionary[id_key] = [id_data]
@@ -150,14 +156,43 @@ def add_relation_to_dict(dictionary, id_key, id_data):
 
 
 def start_timer_at(time):
+    """Prints information about the time obtained from the time library.
+    Returns the passed time for storing purpouses.
+    
+    >>> start = start_timer_at(time())
+    12:06:20.514967
+    >>> start
+    1619777180.5149667
+    """
     print(datetime.fromtimestamp(time).time())
     return time
 
-def stop_timer_at(time, start):
-    print('\rfinished processing in '+str(time-start)+' seconds')
-    return time
+def stop_timer_at(stop, start):
+    """Prints information about the elapsed processing time, calculating from
+    the start time, to the stop time, both of wich are passed as inputs.
+    
+    >>> end = stop_timer_at(time(),start)
+    finished processing in 6.508876800537109 seconds
+    >>> end
+    1619777666.3599267
+    """
+    print('\rfinished processing in '+str(stop-start)+' seconds')
+    return stop
 
 def check_overlap_percentage(initial_dataset, dataset_name, link_network, final_dataset_name, precise=False):
+    """Given an initial_dataset and a link_network, checks for how many items
+    of the link_network have a connection, wich means a "non empty" list, then
+    calculates the percentage of connections with respect to the total entries of
+    the initial_dataset.
+    Prints out the result using the linked dataset names for better comprehention.
+    If precise is set to True, also prints the float value of the percentage,
+    wich could be useful to spot subtle changes in the linking outcome.
+    Returns over for eventual computations.
+    
+    >>> check_overlap_percentage(RXdata.id_diseases_dict, 'RXdata', RX_to_SNAP_disease_links, 'SNAPdata diseases', precise=True)
+    overlap between RXdata and SNAPdata diseases : 94%
+    94.98480243161094
+    """
     count=0
     for key, (lis, score, chek) in link_network.items():
         if lis == ['']:
@@ -166,20 +201,32 @@ def check_overlap_percentage(initial_dataset, dataset_name, link_network, final_
             count+=1
     total = len(initial_dataset)
     over = (count/total)*100
-    overlap = int((count/total)*100)
+    overlap = int(over)
     print('overlap between '+dataset_name+' and '+final_dataset_name+' : '+str(overlap)+'%')
     if precise:
         print(over)
-    return overlap
+    return over
 
 def check_unlinked(check_dict):
-    lisa=[]     
+    """Checks for how many items of the check_dict don't have a connection,
+    wich means an "empty" list, then appends the respective key to a list
+    wich will be returned at the end.
+    
+    >>> check_unlinked({'fever':(['some connection'], 2, 'unchecked'), 'nausea':([''], None, 'unchecked')})
+    ['nausea']
+    """
+    lista=[]     
     for key, (lis, score, chek) in check_dict.items():
         if lis == ['']:
-            lisa.append(key)
-    return lisa
+            lista.append(key)
+    return lista
 
 def create_tsv_table_file(filename, output_dict):
+    """
+    Given a dictionary of ID conncetions, with score and status, and
+    a 'filename.tsv', creates a tsv file containing the dictionary informations.
+    The coloumns names are: ID_start - ID_end - Score - Status
+    """
     tsv_file = open(filename, 'w')
     tsv_file.truncate()
     tsv_file.write('# ID_start\tID_end\tScore\tStatus\n')
@@ -190,6 +237,15 @@ def create_tsv_table_file(filename, output_dict):
     return 'Done'
 
 def create_stargate_network_table(database_name, output_dict, table_name, initial_ID_table_column_ref, final_ID_table_column_ref):
+    """
+    Creates a new table (or updates the existing one) in the passed database,
+    populating it with the output_dict dictionary informations.
+    The table is composed of four columns: 
+        column 1: the ID reference of the connecting table
+        column 2: the ID reference of the recieving table
+        column 3: the score of the connection
+        column 4: the status of the connection
+    """
     database = sqlite3.connect(database_name)
     c = database.cursor()
     initial_column = initial_ID_table_column_ref.split('(')[1].split(')')[0]
@@ -204,8 +260,11 @@ def create_stargate_network_table(database_name, output_dict, table_name, initia
     return 'Done'
 
 def count_elements(lis):
-    """
-    returns a list with the respective frequencies of every element of the list
+    """Given a list, returns another list with the same lenght, wich has 
+    in place of every element of the passed list, its frequency in that list.
+    
+    >>> count_elements(['a', 'a', 'b', 'c', 'b', 'a', 'd', 'z'])
+    [3, 3, 2, 1, 2, 3, 1, 1]
     """
     counts = []
     for el in lis:
@@ -213,16 +272,13 @@ def count_elements(lis):
     return counts
 
 def frequency_dictionary(lis):
-    """
-    creates a dictionary with every element of the passed list as a key
-    and his frequency inside the list as data
+    """Given a list, returns a dictionary that has every element of the
+    passed list as key and his frequency inside that list as item.
+    
+    >>> frequency_dictionary(['a', 'a', 'b', 'c', 'b', 'a', 'd', 'z'])
+    {'a':3, 'b':2, 'c':1, 'd':1, 'z':1}
     """
     dictionary = {}
     for el in lis:
         dictionary[el] = lis.count(el)
     return dictionary
-
-
-
-
-

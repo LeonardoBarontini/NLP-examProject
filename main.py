@@ -4,8 +4,9 @@ Main module from where the global execution starts and is handeled.
 
 from time import time
 
-from managment_functions import start_timer_at, stop_timer_at, check_overlap_percentage
-from managment_functions import check_unlinked, create_tsv_table_file, create_stargate_network_table
+from managment_functions import start_timer_at, stop_timer_at
+from managment_functions import create_tsv_table_file, create_stargate_network_table
+from managment_functions import check_overlap_percentage, check_unlinked
 from RX_database_class import RX_instance
 from disgenet_database_class import Disgenet_instance
 from stargate import Stargate_to_SNAP_diseases
@@ -23,10 +24,10 @@ start = start_timer_at(time())
 
 
 stargateD = Stargate_to_SNAP_diseases()
-stargateD.SNAP_data.create_SNAP_disease_table('Stargate_big_database.db')
+stargateD.SNAP_data.create_SNAP_disease_table_in('Stargate_big_database.db')
 
 stargateG = Stargate_to_SNAP_gene()
-stargateG.SNAP_data.create_SNAP_gene_table('Stargate_big_database.db')
+stargateG.SNAP_data.create_SNAP_gene_table_in('Stargate_big_database.db')
 
 
 end = stop_timer_at(time(),start)
@@ -41,7 +42,7 @@ start = start_timer_at(time())
 
 
 RXdata = RX_instance('RXlist_data.json')
-RXdata.process('Stargate_big_database.db')
+RXdata.process_RXdata_to('Stargate_big_database.db')
 
 
 end = stop_timer_at(time(),start)

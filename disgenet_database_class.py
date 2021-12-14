@@ -2,8 +2,8 @@
 Module containing the Disgenet_instance class wich handles the disgenet-database.
 """
 
-import pandas
 import sqlite3
+import pandas
 
 
 class Disgenet_instance:
@@ -107,51 +107,115 @@ class Disgenet_instance:
         self.variantGene = None
         
     def load_disease2class_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.disease2class = pandas.read_sql_query("SELECT * FROM disease2class", self.database)
 
     def unload_disease2class_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.disease2class = None
 
     def load_diseaseAttributes_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.diseaseAttributes = pandas.read_sql_query("SELECT * FROM diseaseAttributes", self.database)
 
     def unload_diseaseAttributes_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.diseaseAttributes = None
 
     def load_diseaseClass_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.diseaseClass = pandas.read_sql_query("SELECT * FROM diseaseClass", self.database)
 
     def unload_diseaseClass_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.diseaseClass = None
 
     def load_geneAttributes_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.geneAttributes = pandas.read_sql_query("SELECT * FROM geneAttributes", self.database)
 
     def unload_geneAttributes_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.geneAttributes = None
 
     def load_geneDiseaseNetwork_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.geneDiseaseNetwork = pandas.read_sql_query("SELECT * FROM geneDiseaseNetwork", self.database)
 
     def unload_geneDiseaseNetwork_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.geneDiseaseNetwork = None
 
     def load_variantAttributes_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.variantAttributes = pandas.read_sql_query("SELECT * FROM variantAttributes", self.database)
 
     def unload_variantAttributes_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.variantAttributes = None
 
     def load_variantDiseaseNetwork_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.variantDiseaseNetwork = pandas.read_sql_query("SELECT * FROM variantDiseaseNetwork", self.database)
 
     def unload_variantDiseaseNetwork_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.variantDiseaseNetwork = None
 
     def load_variantGene_table(self):
+        """
+        Loader method for the named table.
+        It reads from the database and save the table in the respective class attribute.
+        """
         self.variantGene = pandas.read_sql_query("SELECT * FROM variantGene", self.database)
 
     def unload_variantGene_table(self):
+        """
+        Unloader method for the named table.
+        Sets the respective class attribute to None.
+        """
         self.variantGene = None
 
 
@@ -170,6 +234,7 @@ class Disgenet_instance:
         >>> instance.disease_list
         AttributeError: 'Disgenet_instance' object has no attribute 'disease_list'
         """
+        self.disease_list = []
         target = self.diseaseAttributes['diseaseName']
         self.disease_list = list(target)
 

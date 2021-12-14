@@ -24,10 +24,10 @@ Therefore we need to check for the stemmed word, not in the *set*, but in *every
 matched_entries
 ------------------------------
 We now step up a level, the ``matched_entries`` function manages the ``dict_of_sets`` taken in input, passing one set at a time to the ``words_in_set`` function.
-When the ``words_in_set`` function returns a score, if it's not zero, wich means that at least one match has been found, the ``matched_entries`` function adds to the dictionary it's building, the ``name`` of the matched set, as the key, together with its ``score``, as value.
+When the ``words_in_set`` function returns a score, if it's not zero, wich means that at least one match has been found, the ``matched_entries`` function adds to the dictionary it is building, the ``name`` of the matched set, as the key, together with its ``score``, as value.
 
 We have seen that single word matches are problematic, but what to do when the set we are looking at has only one word?
-That's why we can enable checking for ``mono`` word sets. In these cases, when there's a match the score will be negative. Checking for that and for the set to contain only one word, will let us set the ``score`` to an arbitrary '1', therefore recovering the match for further computations.
+That's why we can enable checking for ``mono`` word sets. In these cases, when there's a match the score will be negative for sure. Checking for the set to contain only one word, will let us set the ``score`` to an arbitrary '1', therefore recovering the match for further computations.
 
 best_match
 ------------------------------
@@ -35,17 +35,21 @@ Lastly, the ``best_match`` function checks all the ``matched_entries`` picking t
 Iterating over the obtained dictionary, the function initially saves the first positive non-zero ``entry``: ``score`` pair that it founds, then updates it whenever a higher ``score`` appears.
 Allowing for multiple best matches, every time a ``score`` equal to the best one is found, the ``entry`` is appended to the ``best_list``. The first ``best_entry`` found is appended last to dodge possible swapping mistakes.
 
-Stargate uses databases
+When are these functions used?
+------------------------------
+To check the words of the connecting database to the receiving one's words, Stargate uses the NLP functions described above, calling the ``best_match`` functions with the appropriate parameters.
+
+Stargate classes
 **********************
 This is a database linking project so it's normal to use databases, but the way the task is handled is worth some explanation.
 
-As you can see that the `stargate module <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/stargate.py>`_ has more than one ``Stargate_*_`` class. That's because every receiving database needs its own procedure to be handled. In the same way, every connecting database needs to properly try to connect, depending on wich database it is trying to reach.
+As you can see the `stargate module <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/stargate.py>`_ has more than one ``Stargate_*_`` class. That's because every receiving database needs its own procedure to be handled. In the same way, every connecting database needs to properly try to connect, depending on wich database it is trying to reach.
 
 Stargate_to_SNAP_diseases
 ------------------------------
 To handle connections to the ``SNAP_D_MeshMiner_miner_disease`` database, first of all the data has to be loaded, so we don't need to load again everything every time we try to connect a new database, we just use the same ``database_class_instance``. Then the data needs to be prepared for computation, this is because using raw database data accessed directly and processed during runtime, would result in aeons long computations.
 
-The reasoning behind these preparation, both for the connecting and the receiving databases, are that we are trying to match entries between two different formatted databases, so we need to identify a common value type that allow for unique, easy and significant enough connections, and they have to be correct (as much as possible).
+The reasoning behind these preparation, both for the connecting and the receiving databases, is that we are trying to match entries between two different formatted databases, so we need to identify a common value type that allow for unique, easy and significant enough connections, and they have to be correct (as much as possible).
 
 So after we identified the discriminant value we will try to match with, we need to develop these preparations. In this case, matchings are based on disease names. The receiving database is the one most work is done upon, here it's the SNAP database because of its ``synonims`` values that enlarge the word pool for every disease name and for its ``description`` values, both of wich highten the chanches of a successfull link.
 
@@ -53,16 +57,13 @@ For both databases, disease names, synonims and descriptions are divided by word
 
 Stargate_to_SNAP_genes
 ------------------------------
-Handling connections to the ``G_SynMiner_miner_geneHUGO`` is easier because we can rely on genes codes wich are unique and we can directly compare the values between databases.
+Handling connections to the ``G_SynMiner_miner_geneHUGO`` is easier because we can rely on genes codes (``symbol``) wich are unique and we can directly compare the values between databases.
 
 Not having to process the data means a faster computation and the lack of need of checking functions.
 
-Stargare also uses NLP funcions!
+Database classes
 **********************
-To check the connecting words to the receiving ones, Stargate uses the NLP functions described above, calling the ``best_match`` functions with the appropriate parameters.
-
-You said databases, what about them?
-**********************
+The database modules: `disgenet_database_class <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/disgenet_database_class.py>`_, `RX_database_class <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/RX_database_class.py>`_ and `snap_database_classes <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/snap_database_classes.py>`_, contains the class instances that handle the various database used.
 
 D_MeshMiner_miner_disease_instance
 ------------------------------
@@ -97,7 +98,7 @@ The ``create_RX_database`` creates the database and the functions ``insert_into_
 
 Some management functions
 **********************
-In the ``management_functions`` module are grouped some general pourpouse functions used in various places of the project.
+In the `management_functions <https://github.com/LeonardoBarontini/NLP-examProject/blob/main/management_functions.py>`_ module are grouped some general pourpouse functions used in various places of the project.
 
 format_string
 -------------
@@ -113,7 +114,7 @@ This function is used to see in percentage how many entries have been linked wit
 
 check_unlinked
 --------------
-This function returns a list of the entries that did not get a connection. It's intended to be used when the ``Stargate`` methods are called using the ``*_with_check`` variant, giving it in input the ``check_dict``. Its use is to show wich entries have failed to get a link, hoping that this could give some hints on how to boost the matching algorithm. It can be also used to inspect the list of missing entries in the receiving database, for eventual integrations.
+This function returns a list of the entries that did not get a connection. It's intended to be used when the ``Stargate`` methods are called using the ``*_with_check`` variant, as it takes in input the ``check_dict`` outputted by those variants. Its use is to show wich entries have failed to get a link, hoping that this could give some hints on how to boost the matching algorithm. It can also be used to inspect the list of missing entries in the receiving database, for eventual integrations.
 
 The main function
 **********************

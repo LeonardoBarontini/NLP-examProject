@@ -1,3 +1,46 @@
+--- Documentation and tests 3 ---
+improved comunicability of Tutorial
+improved comunicability of Explanation
+improved name comunicability of some functions
+improved boosted format_string function: now actually removes punctuation (also 'and', 'with', 'without', and single digit numbers)
+added more tests for format_string function
+corrected stop_words / taboo_words distinction
+added reference and docstrings for format_string function
+added reference and docstrings for add_unique_disease_id function
+added reference and docstrings for add_unique_symptom_id function
+added reference and docstrings for add_unique_drug_id function
+added reference and docstrings for get_id_of_string function
+added tests for add_relation_to_dict function
+added reference and docstrings for add_relation_to_dict function
+added reference and docstrings for start_timer_at function
+added reference and docstrings for stop_timer_at function
+added reference and docstrings for check_overlap_percentage function
+added reference and docstrings for check_unlinked function
+added tests for check_overlap_percentage function
+added tests for check_unlinked function
+added reference and docstrings for count_elements function
+added reference and docstrings for frequency_dictionary function
+added tests for count_elements function
+added tests for frequency_dictionary function
+improved docstrings and reference for Disgenet_instance class and relative methods
+added tests for start_timer_at function
+added tests for stop_timer_at function
+added tests for create_tsv_table_file function
+added reference and docstrings for create_tsv_table_file function
+added tests for create_stargate_network_table function
+added reference and docstrings for create_stargate_network_table function
+added docstring for snap_database_classes module
+added reference and docstrings for D_MeshMiner_miner_disease_instance class and relative methods
+added tests for D_MeshMiner_miner_disease_instance class and relative methods
+added reference and docstrings for G_SynMiner_miner_geneHUGO_instance class and relative methods
+added tests for G_SynMiner_miner_geneHUGO_instance class and relative methods
+added reference and docstrings for RX_instance class and relative methods
+added tests for RX_instance class and relative methods
+added reference and docstrings for Stargate_to_SNAP_diseases class and relative methods
+added tests for Stargate_to_SNAP_diseases class and relative methods
+added reference and docstrings for Stargate_to_SNAP_gene class and relative methods
+added tests for Stargate_to_SNAP_gene class and relative methods
+
 --- Documentation and tests 2 ---
 slightly improved link quality in disease links, introducing word stopping
 added tutorial for base use of the project
