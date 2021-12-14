@@ -4,7 +4,7 @@
 Tutorial
 =========
 
-Stargate  "pre biult" for its designed use case, `having the database files`, you just have to git clone, cd to the project directory, `where you'll also put your databases`, check for filenames correspondence and run the main.py file.
+Stargate comes "pre biult" for its designed use case, `having the database files`, you just have to git clone, cd to the project directory, `where you'll also put your databases`, check for filenames correspondence and run the main.py file.
 
 Let us first explore what to expect from the program execution.
 
@@ -167,7 +167,7 @@ Now let's say you want to add another database the the stargate network...
 
 Well, unless that database has the same structure of one of the already used databases, you will have to biuld your own class to handle that database....
 
-Otherwise, let's say you have a disgenet-like database, you can just copy the corresponding part of the main.py module and paste it at the end of the module, then change all the name strings needed and you're done. Beware tho that beeing database-like means, not only having the same form or the same number of tables, but also the same table and column names, written in the same exact way or you'll have to modify the program if you don't want it to brake. 
+Otherwise, let's say you have a disgenet-like database, you can just copy the corresponding part of the main.py module and paste it at the end of the module, then change all the name strings needed and you're done. Beware tho that beeing database-like means, not only having the same form or the same number of tables, but also the same table and column names, written in the same exact way or you'll have to modify the program if you don't want it to break. 
 
 
 
